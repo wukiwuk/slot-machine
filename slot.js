@@ -8,6 +8,23 @@
 
 const prompt = require("prompt-sync")();
 
+const rows = 3;
+const cols = 3;
+
+const symbols_count = {
+    A: 2,
+    B: 4,
+    C: 6,
+    D: 8,
+}
+
+const symbol_values = {
+    A: 5,
+    B: 4,
+    C: 3,
+    D: 2
+}
+
 const depo = () => {
     while (true) {
         const depoAmount = prompt("Enter a deposit amount: ");
@@ -47,8 +64,33 @@ const getBet= (balance, lines) => {
     }
 };
 
+const spin = () => {
+    const symbols = [];
+    for (const [symbol, count] of Object.entries(symbols_count)) {
+        for (let i = 0; i < count; i++) {
+            symbols.push(symbol);
+        }
+    }
 
+    const reels = [[], [], []];
+    for (let i = 0; i < cols; i++) {
+        const reelSymbols = [...symbols]
+        for (let j = 0; j < rows; j++) {
+            const randomIndex = Math.floor(Math.random() * reelSymbols.length);
+            const selectedSymbol = reelSymbols[randomIndex];
+            reels[i].push(selectedSymbol);
+            reelSymbols.splice(randomIndex, 1);
+        }
+    }
+
+    return reels
+}
+
+
+
+const reels = spin()
 let balance = depo();
 const numLine = getNumOfLines();
 const bet = getBet(balance, numLine);
+console.log(reels)
 
