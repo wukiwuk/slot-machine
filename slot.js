@@ -97,7 +97,7 @@ const transpose = (reels) => {
         }
     }
 
-    return row
+    return row;
 };
 
 
@@ -106,6 +106,8 @@ let balance = depo();
 const numLine = getNumOfLines();
 const bet = getBet(balance, numLine);
 const reels = spin()
-const row = transpose()
+const row = transpose(reels)
+console.log(reels)
+console.log(row)
 
 
