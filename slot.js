@@ -72,7 +72,7 @@ const spin = () => {
         }
     }
 
-    const reels = [[]];
+    const reels = [];
     for (let i = 0; i < cols; i++) {
         reels.push([]);
         const reelSymbols = [...symbols];
@@ -100,14 +100,68 @@ const transpose = (reels) => {
     return row;
 };
 
+const Rows = (row) => {
+    for(const ro of row) {
+        let rowString = "";
+        for(const [i, symbol] of ro.entries()) { 
+            rowString += symbol;
+            if(i != row.length - 1) {
+                rowString += " | ";
+            }
+        }
+        console.log(rowString);
+    }
+}
 
+const Winnings = (row, bet, lines) => {
+    let winnings = 0;
 
-let balance = depo();
-const numLine = getNumOfLines();
-const bet = getBet(balance, numLine);
-const reels = spin()
-const row = transpose(reels)
-console.log(reels)
-console.log(row)
+    for (let ro = 0; ro < lines; ro++) {
+        const symbols = row[ro];
+        let allSame = true;
+
+        for(const symbol of symbols) {
+            if (symbol != symbols[0]) {
+                allSame = false;
+                break;
+            }
+        }
+        if (allSame) {
+            winnings += bet * symbol_values[symbols[0]];
+        }
+    }
+    return winnings;
+}
+
+const game = () => {
+    let balance = depo();
+
+    while (true) {
+        console.log("Your balance is $" + balance);
+        const numLine = getNumOfLines();
+        const bet = getBet(balance, numLine);
+        balance -= bet * numLine;
+        const reels = spin();
+        const row = transpose(reels)
+        const ro = Rows(row);
+        console.log(ro);
+        const winnings = Winnings(row, bet, numLine) ;
+        balance += winnings;
+        console.log("YOU HAVE WON $" + winnings.toString());
+
+        if (balance <= 0 ) {
+            console.log("You're balance is empty")
+            break;
+        }
+
+        const playAgain = prompt("Do you want to play again (Y/N)?: ")  
+        if (playAgain != "Y") {
+            break;
+        } 
+    }
+}
+
+game()
+
 
 
